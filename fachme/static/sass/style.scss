@@ -1,0 +1,813 @@
+@import "compass/css3/transition";
+@import "compass/css3/border-radius";
+@import "compass/css3/box-shadow";
+// Sprites
+$sprites: sprite-map("sprites/*.png", $layout: smart);
+$sprites2x: sprite-map("sprites2x/*.png", $layout: smart);
+ 
+//Sprite mixin, works perfectly with standard defines
+@mixin use-sprite($sprite) {
+    background-image: sprite-url($sprites);
+    background-position: sprite-position($sprites, $sprite);
+    background-repeat: no-repeat;
+    overflow: hidden;
+    display: block;
+    height: image-height(sprite-file($sprites, $sprite));
+    width: image-width(sprite-file($sprites, $sprite));
+
+    @media (-webkit-min-device-pixel-ratio: 2), (-o-min-device-pixel-ratio: 3/2), (min-device-pixel-ratio: 2) {
+        background-image: sprite-url($sprites2x);
+        background-size: (image-width(sprite-path($sprites2x)) / 2) (image-height(sprite-path($sprites2x)) / 2);
+        background-position: round(nth(sprite-position($sprites2x, $sprite), 1) / 2) round(nth(sprite-position($sprites2x, $sprite), 2) / 2);
+        height: image-height(sprite-file($sprites2x, $sprite)) / 2;
+        width: image-width(sprite-file($sprites2x, $sprite)) / 2;
+    }
+}
+
+// Disable mobile tap highlight
+@mixin disable-tap-highlight() {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); 
+}
+
+$border-color: #b2c4d4;
+$background-color: #ffffff;
+
+// Desktop
+$page-width: 400px;
+
+// Mobile
+$mobile-margin: 10px;
+$row-height: 44px;
+$line-height: 16px;
+$row-top-padding: ($row-height - ($line-height * 2)) / 2;
+$tap-icon-size: 35px;
+
+@mixin tap-icon {
+    width: $tap-icon-size;
+    height: $tap-icon-size;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    &:after {
+        cursor: pointer;
+        display: block;
+    }
+
+}
+// Spent hours thinking this was a token autocomplete bug
+input::-ms-clear {
+    display: none;
+}
+
+body {
+    position: relative;
+    text-align: center;
+    margin: 0;
+    font-family: "Helvetica Neue", "HelveticaNeue", Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    overflow-y: scroll;
+    background-color: $background-color;
+}
+
+// Show a user if they are admin
+.classIndicator {
+    text-align: right;
+    background: grey;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    color: $background-color;
+}
+
+input {
+    border: none; // Prevents ugly input while we load
+    background-color: $background-color;
+}
+
+a {
+    color: #152d38;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+h1 {
+    margin: 0;
+    #logo {
+        border: 0;
+        @include use-sprite(logo);
+        text-indent: -9999px;
+        display: block;
+    }
+}
+
+h2 {
+    color: #434d54;
+}
+
+// Selected characters
+ul.token-input-list {
+    padding: 0;
+    margin: 0;
+    li {
+        list-style-type: none;
+        p {
+            text-align: left;
+            span.name {
+                font-weight: bold;
+            }
+            span.additional {
+                color: #928e74;
+                font-weight: normal;
+                display: block;
+            }
+        }
+        &.token-input-token {
+            position: relative;
+            overflow: hidden;
+            background-color: #fffce2;
+            color: #827e66;
+            font-weight: bold;
+            cursor: default;
+            display: block;
+            p {
+                float: left;
+                margin: 0;
+                padding: 5px 0 0 0;
+            }
+            span.token-input-delete-token {
+                @include tap-icon;
+                text-indent: -9999px;
+                position: absolute;
+                right: 5px;
+                &:after {
+                    position: absolute;
+                    $height: image-height(sprite-file($sprites, close));
+                    $width: image-width(sprite-file($sprites, close));
+                    top: ($tap-icon-size - $height) / 2;
+                    left: ($tap-icon-size - $width) / 2;
+                    content: ' ';
+                    @include use-sprite(close);
+                }
+                &:hover {
+                    &:after {
+                        @include use-sprite(close-focus);
+                    }
+                }
+            }
+        }
+        &.token-input-selected-token {
+            border: 1px solid #827e66;
+        }
+
+        &.token-input-input-token {
+            position: relative;
+            // Search icon
+            &:after {
+                // I wish this could live inside the input, but I can't figure
+                // out how to get that to work. In the mean time, I think the
+                // token plugin will give focus to the input if you click/touch
+                // this li
+                position: absolute;
+                content: ' ';
+                top: 0;
+                left: 0;
+                @include use-sprite(search);
+            }
+            input {
+                @include disable-tap-highlight;
+                //background-color: $background-color;
+                // Removes input shadow?
+                -webkit-appearance: caret;
+                color: #7a848d;
+                border: 0;
+            }
+        }
+    }
+}
+
+div.token-input-dropdown {
+    font-size: 12px;
+    position: absolute;
+    background: $background-color;
+    overflow: hidden;
+    cursor: default;
+    z-index: 1;
+    margin: 0;
+    color: #667682;
+    p {
+        margin: 0;
+        font-weight: normal;
+        color: #667682;
+        line-height: 20px;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+        li {
+            list-style-type: none;
+            text-align: left;
+            span.name {
+                font-weight: bold;
+                display: block;
+            }
+            span.additional {
+                color: #6c7c8a;
+                font-weight: normal;
+                font-size: 11px;
+                b {
+                    font-weight: normal;
+                }
+            }
+            &.token-input-selected-dropdown-item {
+                background: #e1ffd0;
+                position: relative;
+                &:before {
+                    content:"";
+                    right: 20px;
+                    top: 50%;
+                    margin-top: -8px;
+                    position: absolute;
+                    @include use-sprite(checked);
+                }
+                color: #6b8266;
+                cursor: pointer;
+                span.additional {
+                    color: #6b8266;
+                }
+            }
+            &.token-input-dropdown-item {
+
+            }
+            &.token-input-dropdown-item2 {
+
+            }
+            &.result-type {
+                display: block;
+                background: #FFFCE2;
+                color: #827E66;
+                font-weight: bold;
+                text-align: center;
+                padding: 5px 0;
+                cursor: default;
+                &:before {
+                    // The above .token-input-selected-dropdown-item 
+                    // for some reason applies to this as well
+                    background: none;
+                }
+            }
+        }
+    }
+}
+
+.info {
+    .info-icon {
+        cursor: pointer;
+        margin: 0 auto;
+        @include disable-tap-highlight;
+        @include use-sprite(info);
+        &.active {
+            @include use-sprite(info-focus);
+        }
+    }
+    .info-text {
+        display: none;
+        a {
+            text-decoration: underline;
+        }
+    }
+}
+
+ol#results {
+    li {
+        position: relative;
+        &.hidden {
+            display: none;
+        }
+        span.name {
+            display: block;
+        }
+        a.operaWikipediaLink:hover {
+            position: relative;
+            &:before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: ' ';
+                @include use-sprite(wikipedia);
+            }
+        }
+        a.add {
+            @include tap-icon;
+            position: absolute;
+            text-indent: -9999px;
+            &:after {
+                position: absolute;
+                content: ' ';
+                $height: image-height(sprite-file($sprites, add));
+                $width: image-width(sprite-file($sprites, add));
+                top: ($tap-icon-size - $height) / 2;
+                left: ($tap-icon-size - $width) / 2;
+                @include use-sprite(add);
+                content: ' ';
+            }
+            &:hover {
+                &:after {
+                    @include use-sprite(add-focus);
+                }
+            }
+        }
+    }
+}
+
+div#change {
+    display: none;
+}
+
+div.plea {
+    display: none;
+    .twitter-share-button {
+        margin-top: 0px;
+        margin-right: -22px; // Compensate for Twitter making the button too wide (at least with this few digits)
+        position: relative;
+    }
+}
+
+/* -------------------------------------------------- 
+	design for 480px and above
+/* -------------------------------------------------- */
+@media only screen and (min-width: 480px) {
+
+body {
+    padding: 46px 0 0 0; // Padding prevents dropdown placement from breaking
+}
+
+h1 {
+    #logo {
+        margin: 60px auto;
+    }
+}
+
+h2 {
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    &.title {
+        font-size: 14px;
+    }
+}
+
+
+
+#copyright {
+    color: #777;
+    margin: 50px 0 50px 0;
+    font-size: 11px;
+    a {
+        color: #777;
+    }
+}
+
+/* Index specific */
+#character-list {
+    display: none;
+} /* Hide the character list until it is populated */
+
+#roles {
+    margin: 0 auto;
+    width: $page-width;
+    text-align: center;
+}
+
+// Explanation of what FachMe does (for the curious)
+.info {
+    margin: 75px 0;
+    .info-text {
+        padding-top: 30px;
+        color: #3c4750;
+        font-size: 12px;
+        line-height: 18px;
+    }
+}
+
+/* Results Page Specific */
+#languageNav {
+    margin: 0px auto;
+    padding: 0;
+    li {
+        list-style: none;
+        display: inline;
+        margin: 0 5px;
+        font-size: 14px;
+        padding: 0;
+    }
+}
+
+ol#results {
+    $number-width: 25px;
+    padding: 0 0 0 $number-width;
+    margin: 0 auto 0 auto;
+    width: $page-width - $number-width;
+    text-align: left;
+    font-size: 14px;
+    color: #434d54;
+    font-weight: 400;
+    li {
+        position: relative;
+        width: $page-width - $number-width;
+        padding-bottom: 15px;
+        span.additional {
+            display: block;
+            color: #8296a3;
+            font-weight: normal;
+            margin-right: 35px;
+            line-height: 16px;
+            a.operaWikipediaLink {
+                color: #8296a3;
+                font-weight: normal;
+                text-decoration: underline;
+                margin-left: -22px;
+                padding-left: 22px;
+            }
+        }
+        a.add {
+            position: absolute;
+            top: 3px;
+            right: 0;
+            font-size: 25px;
+            font-weight: bold;
+            color: #8296a3;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+#change {
+    display: none; // Starts hidden
+    font-size: 14px;
+    color: #6c8089;
+    padding: 15px 0;
+    line-height: 18px;
+    #moreLink {
+        text-decoration: underline;
+    }
+}
+
+
+div.plea { // Social links
+    font-size: 14px;
+    padding-top: 45px;
+    fieldset {
+        border: 0;
+    }
+
+    .social {
+        margin-top: 5px;
+    }
+}
+
+.token-input-input-token {
+    height: auto !important;
+    height: 1%;
+    padding-left: 25px; // To accommodate search icon
+    &:after {
+        top: 11px;
+        left: 13px;
+    }
+}
+div.input-container {
+    margin-bottom: 40px;
+}
+
+ul.token-input-list {
+    overflow: hidden;
+    height: 1%;
+    width: 398px;
+    border: 1px solid $border-color;
+    font-size: 12px;
+    z-index: 999;
+    margin: 0 auto 0 auto;
+    padding: 0 0 0px 0;
+    list-style-type: none;
+    clear: left;
+    @include border-radius(5px);
+    text-align: left;
+    li {
+        p {
+            span.additional {
+                font-size: 11px;
+                width: 320px;
+            }
+        }
+        &.token-input-token {
+            margin: 10px 10px 0 10px;
+            padding: 5px 10px;
+            border: 1px solid #e9e7dc;
+            @include border-radius(5px);
+        }
+        &.token-input-input-token {
+            &:after {
+                left: 10px;
+                top: 10px;
+            }
+            input {
+                width: 360px;
+                padding: 5px;
+                margin: 5px 7px;
+            }
+        }
+    }
+}
+
+div.token-input-dropdown {
+    border-left: 1px solid #b2c4d4;
+    border-right: 1px solid #b2c4d4;
+    border-bottom: 1px solid #b2c4d4;
+    padding-top: 5px;
+    margin-top: -10px;
+    -moz-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-bottom: 10px;
+    p {
+        padding: 5px;
+    }
+    ul {
+        li {
+            padding: 3px 0 3px 24px;
+            margin: 3px 0;
+            &.result-type {
+                margin: 3px 0;
+                border-top: 1px solid #E9E7DC;
+                border-bottom: 1px solid #E9E7DC;
+            }
+        }
+    }
+}
+
+}
+
+/* -------------------------------------------------- 
+	design for 480px
+/* -------------------------------------------------- */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+}
+		
+/* -------------------------------------------------- 
+	design for 479px and below
+/* -------------------------------------------------- */
+@media only screen and (max-width: 479px) {
+
+
+    @mixin character-element {
+        padding: 0 $tap-icon-size 0 $mobile-margin;
+        height: $row-height;
+        // Also makes height ignore curved border
+        overflow: hidden; // In case a name is too long
+        font-size: 12px;
+        line-height: $line-height;
+        p {
+            margin: 0;
+        }
+        span.name {
+            margin-top: $row-top-padding;
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        span.additional {
+            font-size: 12px;
+            display: block;
+            a {
+                font-weight: normal;
+            }
+        }
+    }
+    body {
+        padding: 0;
+        font-size: 12px;
+    }
+    h1 {
+        margin: 0;
+        padding: 10px 0;
+        #logo {
+            margin: 0px auto;
+        }
+    }
+    h2 {
+        font-size: 14px;
+        text-align: center;
+        margin: 15px 0;
+    }
+    div.info {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        div.info-icon {
+            //display: none;
+        }
+        div.info-text {
+            padding-top: 30px;
+            margin: 0 $mobile-margin;
+            line-height: 16px;
+        }
+    }
+    div#roles div.input-container {
+        ul.token-input-list {
+            padding: 0;
+            li {
+                @include character-element;
+                margin: 0;
+                list-style-type: none;
+                &.token-input-token {
+                    &:first-child {
+                        @include border-radius(5px 5px 0 0);
+                    }
+                    margin: 0px $mobile-margin;
+                    // Take into account the close button
+                    padding: 0px 35px 0px $mobile-margin;
+                    border-top: 1px solid #e9e7dc;
+                    border-left: 1px solid #e9e7dc;
+                    border-right: 1px solid #e9e7dc;
+                    p {
+                        padding: 0px 0 0 0;
+                    }
+                    span.token-input-delete-token {
+                        @include tap-icon;
+                        top: 5px;
+                        right: 5px;
+                    }
+                }
+                &.token-input-input-token {
+                    border-top: 1px solid $border-color;
+                    border-bottom: 1px solid $border-color;
+                    text-align: left;
+                    position: relative;
+                    overflow: hidden; // Otherwise js sized input increases page width
+                    padding-left: 33px; // To accommodate search icon
+                    height: auto; // Defer to the input's height
+                    &:after {
+                        // Search icon
+                        top: 12px;
+                        left: 18px;
+                    }
+                    input {
+                        border: 0px;
+                        margin: 0;
+                        font-size: 14px;
+                        line-height: 16px;
+                        padding: (35px - 16) / 2 $mobile-margin;
+                    }
+                }
+            }
+        }
+    }
+    div.token-input-dropdown {
+        p, ul {
+            border-bottom: 10px solid $border-color;
+        }
+        p {
+            font-size: 14px;
+            margin: 0;
+            padding: 15px $mobile-margin;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            li {
+                @include character-element;
+                padding: 0px $mobile-margin;
+                margin: 0;
+                border-bottom: 1px solid #EEE;
+                span.additional {
+                    line-height: 16px;
+                    margin-right: $tap-icon-size;
+                    display: block;
+                }
+                &.result-type {
+                    margin: 0;
+                    padding: 10px 0;
+                    height: auto;
+                }
+            }
+        }
+    }
+    ol#results {
+        display: none;
+        margin: $mobile-margin;
+        padding: 0;
+        color: #434D53;
+        border: 1px solid $border-color;
+        &:empty {
+            // Not supported by IE, but we are only using this on mobile
+            // platforms!
+            // Unfortunately, also not supported by Android
+            // (https://code.google.com/p/android/issues/detail?id=37067)
+            // This has been replaced with JS
+            //display: none;
+        }
+        @include border-radius(5px);
+        li {
+            @include character-element;
+            border-top: 1px solid $border-color;
+            text-align: left;
+            position: relative;
+            a {
+                color: #8296a3;
+            }
+            span.name {
+                color: #434d54;
+            }
+            span.additional {
+                color: #8296a3;
+                display: block;
+                a {
+                    text-decoration: underline;
+                    &.operaWikipediaLink:hover:before {
+                        // We have to specify this hover icon outside the media
+                        // query, so we have to just hide it here
+                        display: none;
+                    }
+
+
+                }
+            }
+            &:first-child {
+                border-top: none;
+            }
+            margin: 0;
+            display: block;
+            a.add {
+                @include tap-icon;
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                text-indent: -9999px;
+                &:after {
+                    position: absolute;
+                }
+            }
+        }
+    }
+
+    div#change {
+        font-size: 14px;
+        margin: 20px 0 0 0;
+        a {
+            text-decoration: underline;
+        }
+    }
+
+    div.plea {
+        margin-top: 45px;
+        font-size: 14px;
+        div.social {
+            margin-top: 5px;
+        }
+
+    }
+
+    div#copyright {
+        font-size: 11px;
+        margin: 30px 0;
+        line-height: 15px;
+    }
+}
+
+// Loading animation
+@-webkit-keyframes opacity {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-moz-keyframes opacity {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+#loading {
+	text-align: center; 
+	margin: 100px 0 0 0;
+}
+
+#loading span {
+	-webkit-animation-name: opacity;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	
+	-moz-animation-name: opacity;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+}
+
+#loading span:nth-child(2) {
+	-webkit-animation-delay: 100ms;
+	-moz-animation-delay: 100ms;
+}
+
+#loading span:nth-child(3) {
+	-webkit-animation-delay: 300ms;
+	-moz-animation-delay: 300ms;
+}

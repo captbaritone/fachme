@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Don't resize. We know best. (I hope!) -->
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+        <link rel="stylesheet" href="static/css/style.css" type="text/css" />
+        <link rel="icon" type="image/png" href="static/images/favicon.png" />
+        <meta name="apple-mobile-web-app-title" content="FachMe">
+        <title>FachMe &bull; Tailor-Made Fachs</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="apple-touch-icon" sizes="72x72" href="static/images/apple-touch-icon.png"/>
+    </head>
+    <body>
+        <h1><span id='logo'>FachMe - Tailor-Made Fachs</span></h1>
+        <h2 id='instructions'></h2>
+        <div id="roles">
+            <div class='input-container'>
+                <div id='character-list'><!-- The characters they pick get put in here --></div>
+                <input type='text' name='characterIds' id='search-input' value='' />
+                <div class='search-container'>
+                    <input type="submit" id="search" value=""  style='display: none;'/>
+                </div>
+            </div><!-- /.input-container -->
+            <div class='info'>
+                <div class='info-icon'>&nbsp; </div>
+                <div class='info-text'>
+                    FachMe uses a database of over 16,000 real opera singers' careers to recommend characters which are statistically likely to suit <i>your</i> voice. <br /><a href='redirect.php?type=about' target='_blank'>Read more</a>
+
+                </div>
+            </div><!-- /.info -->
+
+            <h2 class='title' id='fachTitle'><!-- The header for their fach gets put here --></h2>
+            <ol id='results'><!-- The suggested roles get put here --></ol>
+            <div id='change'>
+                <a href='#' id='moreLink'>Show more roles</a>
+            </div>
+        </div><!-- /#roles -->
+        <div class='plea'>
+            Did you enjoy FachMe?
+            <div class='social'>
+                <!-- Javascript associated with these buttons has been moved
+                all the way to the bottom of the page -->
+                <div class="fb-like" data-href="http://fachme.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+            </div><!-- .social -->
+        </div>
+
+
+        <div id='copyright'>
+            &copy; 2011-{{ year }} <a href='redirect.php?type=about-jordan'>Jordan Eldredge</a>
+            <!--
+                Original design by Sergio Bello: desk@sergioismy.name
+                Version: v3.0
+            -->
+        </div><!-- /#copyright -->
+
+        <!-- Internet says Javascript at the bottom, so here you are. So
+        performant! -->
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        {% if False %}
+            <script type="text/javascript" src="static/js/prod.min.js"></script>
+        {% else %}
+            <script type="text/javascript" src="static/js/jquery.tokeninput.js"></script>
+            <script type="text/javascript" src="static/js/main.js"></script>
+            <script type="text/javascript" src="static/js/init.js"></script>
+        {% endif %}
+
+        <div id="fb-root"></div>
+
+        <script>
+        (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=252933978056168";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        </script>
+    </body>
+</html>

@@ -1,0 +1,9 @@
+**/*.pyc
+flask_session/
+dump.rdb
+fachme/static/js/prod*.js
+fachme/static/images/sprites-*.png
+fachme/static/images/sprites2x-*.png
+fachme/static/css/style.css
+fachme/config/*
+^fachme/config/base.py
