@@ -26,7 +26,6 @@ class LearningAutocompleteSuggestions:
         logging.debug("Searching for %s" % (search_string))
         ignore_strings = [str(n) for n in ignore_values]
         key = self._suggestion_key(search_string)
-        logging.warning('key %s' % key)
         for r in self.redis.zrevrange(key, 0, -1):
             if r not in ignore_strings:
                 yield r
