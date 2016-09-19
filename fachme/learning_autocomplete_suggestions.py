@@ -10,9 +10,9 @@ class LearningAutocompleteSuggestions(object):
         self.REDIS_NAMESPACE = namespace
 
     def register_search(self, search_string, search_id=None):
-        '''
+        """
         Associate a search string with this search session
-        '''
+        """
         logging.debug("Searching for %s with id %s" % (search_string, search_id))
         if search_id:
             key = self._search_key(search_id)
@@ -54,9 +54,9 @@ class LearningAutocompleteSuggestions(object):
         self.redis.delete(user_search_key)
 
     def _associate(self, search_string, canonical):
-        '''
+        """
         Associate a search string with a canonical value
-        '''
+        """
         logging.debug("Associating search %s with the canonical value %s" % (search_string, canonical))
         key = self._suggestion_key(search_string)
         self.redis.zincrby(key, canonical, 1)
