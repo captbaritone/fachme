@@ -2,7 +2,7 @@ import redis
 import logging
 
 
-class LearningAutocompleteSuggestions:
+class LearningAutocompleteSuggestions(object):
 
     def __init__(self, namespace='LEARNING_AUTOCOMPLETE', port=6379, db=0, host='localhost'):
         self.redis = redis.StrictRedis(host=host, port=port, db=db)
