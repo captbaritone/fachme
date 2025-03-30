@@ -8,10 +8,9 @@ from learning_autocomplete_suggestions import LearningAutocompleteSuggestions
 from fachme import app
 from fachme.models import Character
 
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
+from db import db
 
-db = SQLAlchemy(app)
 suggestor = LearningAutocompleteSuggestions(
         namespace=app.config.get('AUTOCOMPLETE_NAMESPACE'),
         port=app.config.get('REDIS_PORT'),
@@ -153,7 +152,9 @@ def _fachme(resume):
         AND S_A.old_singer_id = 0
     """.format(**context)
 
-    result = db.engine.execute(text(query).execution_options(autocommit=True))
+    # result = db.engine.execute(text(query).execution_options(autocommit=True))
+    with db.engine.connect() as conn:
+        result = conn.execute(text(query))
     objs = []
     related = defaultdict(lambda: dict(weight=0))
 
@@ -172,12 +173,12 @@ def _fachme(resume):
 
     for obj in objs:
         related[obj.character_b]['weight'] += (
-            (1 / sum(character_a_pops.values())) *
-            (obj.singer_a_pop / sum(singer_a_pops[obj.character_a].values())) *
-            (obj.character_b_pop / sum(character_b_pops[obj.character_a][obj.recording_a].values()))
+            (1 / float(sum(character_a_pops.values()))) *
+            (float(obj.singer_a_pop) / float(sum(singer_a_pops[obj.character_a].values()))) *
+            (float(obj.character_b_pop) / float(sum(character_b_pops[obj.character_a][obj.recording_a].values())))
         )
 
-    related = sorted(related.iteritems(), key=lambda (k, v): v['weight'], reverse=True)
+    related = sorted(related.items(), key=lambda kv: kv[1]['weight'], reverse=True)
 
     ids = [r[0] for r in related]
 

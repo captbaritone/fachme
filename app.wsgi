@@ -7,5 +7,6 @@ logging.basicConfig(stream=sys.stderr)
 # just hard-code it for now.
 os.environ['FACHME_CONFIG'] = 'config/production.py'
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, '/var/www/py.fachme.com/fachme')
 
 from fachme import app as application

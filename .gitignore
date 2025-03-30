@@ -7,3 +7,4 @@ fachme/static/images/sprites2x-*.png
 fachme/static/css/style.css
 fachme/config/*
 ^fachme/config/base.py
+venv/

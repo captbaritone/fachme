@@ -1,0 +1,6 @@
+flask
+Flask-Session
+flask_sqlalchemy
+PyMySQL
+redis
+

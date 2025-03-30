@@ -1,10 +1,7 @@
 from fachme import app
 
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
-
-db = SQLAlchemy(app)
-
+from db import db
 
 class Composer(db.Model):
     __tablename__ = 'composers'
