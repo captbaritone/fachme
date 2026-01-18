@@ -9,6 +9,15 @@
         <meta name="apple-mobile-web-app-title" content="FachMe">
         <title>FachMe &bull; Tailor-Made Fachs</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GCC1WVSG7S"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-GCC1WVSG7S');
+        </script>
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="apple-touch-icon" sizes="72x72" href="static/images/apple-touch-icon.png"/>
         {% if base_url %}<base href="{{ base_url }}"/>{% endif %}
@@ -38,15 +47,6 @@
                 <a href='#' id='moreLink'>Show more roles</a>
             </div>
         </div><!-- /#roles -->
-        <div class='plea'>
-            Did you enjoy FachMe?
-            <div class='social'>
-                <!-- Javascript associated with these buttons has been moved
-                all the way to the bottom of the page -->
-                <div class="fb-like" data-href="http://fachme.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
-            </div><!-- .social -->
-        </div>
-
 
         <div id='copyright'>
             &copy; 2011-{{ year }} <a href='https://jordaneldredge.com'>Jordan Eldredge</a>
@@ -66,17 +66,5 @@
             <script type="text/javascript" src="static/js/main.js"></script>
             <script type="text/javascript" src="static/js/init.js"></script>
         {% endif %}
-
-        <div id="fb-root"></div>
-
-        <script>
-        (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=252933978056168";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        </script>
     </body>
 </html>
