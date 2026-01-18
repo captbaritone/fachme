@@ -1,10 +1,5 @@
+# Production overrides - use with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 services:
   app:
     ports:
       - "127.0.0.1:5001:5000"  # Only listen on localhost, Apache will proxy
-
-  db:
-    ports: []  # Don't expose MySQL externally
-
-  redis:
-    ports: []  # Don't expose Redis externally
