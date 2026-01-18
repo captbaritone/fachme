@@ -44,7 +44,7 @@ class LearningAutocompleteSuggestions(object):
         # Normalize the searches into all indexable strings
         search_substrings = set()
         for search_string in searches:
-            for i in xrange(len(search_string)):
+            for i in range(len(search_string)):
                 sub_str = search_string[0:i + 1]
                 search_substrings.add(sub_str)
 
