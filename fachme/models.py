@@ -1,7 +1,7 @@
 from fachme import app
 
 from sqlalchemy import or_
-from db import db
+from fachme.db import db
 
 class Composer(db.Model):
     __tablename__ = 'composers'

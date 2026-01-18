@@ -3,13 +3,13 @@ from collections import defaultdict
 from flask import jsonify
 from flask import session
 from flask import request
-from learning_autocomplete_suggestions import LearningAutocompleteSuggestions
+from fachme.learning_autocomplete_suggestions import LearningAutocompleteSuggestions
 
 from fachme import app
 from fachme.models import Character
 
 from sqlalchemy import text
-from db import db
+from fachme.db import db
 
 suggestor = LearningAutocompleteSuggestions(
         namespace=app.config.get('AUTOCOMPLETE_NAMESPACE'),

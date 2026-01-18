@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_session import Session
-from db import db
+from fachme.db import db
 
 
 app = Flask(__name__)
