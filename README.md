@@ -79,6 +79,11 @@ features:
 3. Try to adjust for the biases in the database so that operas that are
    over-represented in our data are no disproportionately recommended.
 
+Development
+===========
+
+See [DOCKER.md](DOCKER.md) for local development and deployment instructions.
+
 Credit
 ======
 
