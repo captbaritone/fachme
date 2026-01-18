@@ -1,0 +1,13 @@
+.git
+__pycache__
+*.pyc
+venv/
+.venv/
+*.egg-info/
+.idea/
+.vscode/
+flask_session/
+.claude/
+*.log
+.DS_Store
+docker/init-db/*.sql

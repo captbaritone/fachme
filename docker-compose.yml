@@ -1,0 +1,50 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5001:5000"
+    environment:
+      - FACHME_CONFIG=config/docker.py
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=fachme
+      - MYSQL_USER=fachme
+      - MYSQL_PASSWORD=fachme
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/init-db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "fachme", "-pfachme"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mysql_data:
+  redis_data:

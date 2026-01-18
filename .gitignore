@@ -6,5 +6,6 @@ fachme/static/images/sprites-*.png
 fachme/static/images/sprites2x-*.png
 fachme/static/css/style.css
 fachme/config/*
-^fachme/config/base.py
+!fachme/config/base.py
+!fachme/config/docker.py
 venv/
