@@ -1,8 +1,6 @@
 services:
   app:
     build: .
-    ports:
-      - "5001:5000"
     environment:
       - FACHME_CONFIG=config/docker.py
     depends_on:

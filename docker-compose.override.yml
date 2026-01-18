@@ -1,0 +1,5 @@
+# Local development overrides - automatically loaded by docker compose
+services:
+  app:
+    ports:
+      - "5001:5000"
